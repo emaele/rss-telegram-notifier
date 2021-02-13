@@ -1,14 +1,18 @@
 package main
 
 import (
-	"gorm.io/gorm"
-
 	"github.com/mmcdole/gofeed"
+	tb "gopkg.in/tucnak/telebot.v2"
+	"gorm.io/gorm"
 )
 
 var (
-	bindAddress string
+	// Config params
+	bindAddress    string
+	telegramToken  string
+	telegramChatID int64
 
+	bot        *tb.Bot
 	feedParser *gofeed.Parser
 
 	db *gorm.DB

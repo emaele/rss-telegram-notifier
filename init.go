@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/mmcdole/gofeed"
+	tb "gopkg.in/tucnak/telebot.v2"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -22,5 +24,15 @@ func init() {
 	db.AutoMigrate(&rssfeed{})
 	db.AutoMigrate(&rsselement{})
 
+	// initializing telegram bot
+	bot, err = tb.NewBot(tb.Settings{
+		Token:  telegramToken,
+		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
+	})
+
+	// starting fetch routine
 	go fetchElements()
+
+	// starting notify routine
+	go notificationRoutine()
 }

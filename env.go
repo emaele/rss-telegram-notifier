@@ -1,6 +1,10 @@
 package main
 
-import "os"
+import (
+	"log"
+	"os"
+	"strconv"
+)
 
 func readVars() {
 	var ok bool
@@ -8,5 +12,21 @@ func readVars() {
 	bindAddress, ok = os.LookupEnv("RSS_SERVER_BIND_ADDRESS")
 	if !ok {
 		bindAddress = "localhost:26009"
+	}
+
+	telegramToken, ok = os.LookupEnv("TELEGRAM_TOKEN")
+	if !ok {
+		log.Fatal("telegram token not found")
+	}
+
+	chatidTemp, ok := os.LookupEnv("TELEGRAM_CHAT")
+	if !ok {
+		log.Fatal("telegram chatid not found")
+	}
+
+	var err error
+	telegramChatID, err = strconv.ParseInt(chatidTemp, 10, 64)
+	if err != nil {
+		log.Fatal("telegram chatid is not valid")
 	}
 }
