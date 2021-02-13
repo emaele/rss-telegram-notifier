@@ -32,7 +32,23 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		URL:         feed.FeedLink,
 	}
 
-	db.Debug().Create(&rssFeed)
+	var f rssfeed
+	rows := db.Where(rssfeed{URL: rssFeed.URL}).Find(&f).RowsAffected
+	if rows != 0 {
+		writer.WriteHeader(http.StatusUnprocessableEntity)
+		writer.Write([]byte("duplicate!"))
+
+		return
+	}
+
+	err = db.Create(&rssFeed).Error
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		writer.Write([]byte("unable to add feed"))
+		log.Panic(err)
+		return
+	}
 
 	writer.Write([]byte("added"))
+	return
 }

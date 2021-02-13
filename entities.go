@@ -6,8 +6,8 @@ import (
 
 type rsselement struct {
 	gorm.Model
-	Title       string
-	Description string
+	Title       string `json:"Title"`
+	Description string `json:"Description"`
 	URL         string `gorm:"not null,unique"`
 	Sent        bool
 	Feed        uint `gorm:"not null"`
@@ -15,7 +15,7 @@ type rsselement struct {
 
 type rssfeed struct {
 	gorm.Model
-	Title       string
-	Description string
-	URL         string `gorm:"not null,unique"`
+	Title       string `json:"Title"`
+	Description string `json:"Description"`
+	URL         string `json:"URL" gorm:"not null,unique"`
 }

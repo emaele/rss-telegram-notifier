@@ -6,7 +6,7 @@ import (
 )
 
 func fetchElements() {
-	for range time.NewTicker(time.Hour).C {
+	for range time.NewTicker(time.Minute).C {
 		// get feeds
 		var feeds []rssfeed
 
