@@ -14,8 +14,7 @@ func getItems(writer http.ResponseWriter, request *http.Request) {
 
 	feed, ok := vars["id"]
 	if !ok {
-		writer.WriteHeader(http.StatusNotFound)
-		writer.Write([]byte("request feed is not found"))
+		writeHTTPResponse(http.StatusNotFound, "requested feed is not found", writer)
 		return
 	}
 
