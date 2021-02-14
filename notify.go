@@ -10,7 +10,7 @@ import (
 
 func notificationRoutine() {
 
-	for range time.NewTicker(1 * time.Minute).C {
+	for range time.NewTicker(10 * time.Minute).C {
 		var elements []rssItem
 		rows := db.Where("sent = ?", false).Find(&elements).RowsAffected
 
