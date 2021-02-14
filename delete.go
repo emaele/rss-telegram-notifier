@@ -12,8 +12,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 
 	feed, ok := vars["id"]
 	if !ok {
-		writer.WriteHeader(http.StatusNotFound)
-		writer.Write([]byte("request feed is not found"))
+		writeHTTPResponse(http.StatusNotFound, "request feed is not found", writer)
 		return
 	}
 
@@ -31,6 +30,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		log.Panic(err)
 		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
+		return
 	}
 
 	// deleting feed elements
