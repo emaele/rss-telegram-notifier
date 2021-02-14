@@ -19,7 +19,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	bodyBytes, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		log.Panic(err)
-		writer.WriteHeader(http.StatusInternalServerError)
+		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
 		return
 	}
 	bodyString := string(bodyBytes)
@@ -28,32 +28,35 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	feed, err := feedParser.ParseURL(bodyString)
 	if err != nil {
 		log.Panic(err)
-		writer.WriteHeader(http.StatusUnprocessableEntity)
+		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
 		return
 	}
 
-	rssFeed := rssfeed{
+	rssfeed := rssFeed{
 		Title:       feed.Title,
 		Description: feed.Description,
 		URL:         feed.FeedLink,
 	}
 
-	var f rssfeed
-	rows := db.Where(rssfeed{URL: rssFeed.URL}).Find(&f).RowsAffected
-	if rows != 0 { // if there are rows affected we have a duplicate
-		writer.WriteHeader(http.StatusUnprocessableEntity)
-		writer.Write([]byte("duplicate!"))
+	var f rssFeed
+	rows := db.Where(rssFeed{URL: rssfeed.URL}).Find(&f).RowsAffected
+
+	// if there are rows affected we have a duplicate
+	if rows != 0 {
+		writeHTTPResponse(http.StatusUnprocessableEntity, "duplicate!", writer)
 		return
 	}
 
 	// Adding feed to db
-	err = db.Create(&rssFeed).Error
+	err = db.Create(&rssfeed).Error
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		writer.Write([]byte("unable to add feed"))
+		writeHTTPResponse(http.StatusInternalServerError, "unable to add feed", writer)
 		log.Panic(err)
 		return
 	}
+
+	// fetching initial elements
+	addItems(f.ID, feed.Items)
 
 	writer.Write([]byte("added"))
 	return

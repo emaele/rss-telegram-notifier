@@ -3,12 +3,14 @@ package main
 import (
 	"log"
 	"time"
+
+	"github.com/mmcdole/gofeed"
 )
 
 func fetchElements() {
 	for range time.NewTicker(30 * time.Minute).C {
 		// get feeds
-		var feeds []rssfeed
+		var feeds []rssFeed
 
 		rows := db.Find(&feeds).RowsAffected
 		log.Printf("found %d feeds to check for\n", rows)
@@ -22,17 +24,24 @@ func fetchElements() {
 
 			log.Printf("found %d elements for %s", len(feed.Items), feed.Title)
 
-			for _, feedelement := range feed.Items {
-				element := rsselement{
-					Title:       feedelement.Title,
-					Description: feedelement.Description,
-					URL:         feedelement.Link,
-					Sent:        false,
-					Feed:        f.ID,
-				}
+			addItems(f.ID, feed.Items)
+		}
+	}
+}
 
-				db.Where(rsselement{URL: element.URL}).FirstOrCreate(&element)
-			}
+func addItems(feedID uint, items []*gofeed.Item) {
+	for _, feedelement := range items {
+		element := rssItem{
+			Title:       feedelement.Title,
+			Description: feedelement.Description,
+			URL:         feedelement.Link,
+			Sent:        false,
+			Feed:        feedID,
+		}
+
+		err := db.Where(rssItem{URL: element.URL}).FirstOrCreate(&element).Error
+		if err != nil {
+			log.Panic(err)
 		}
 	}
 }

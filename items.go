@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getElements(writer http.ResponseWriter, request *http.Request) {
-	var elements []rsselement
+func getItems(writer http.ResponseWriter, request *http.Request) {
+	var items []rssItem
 
 	vars := mux.Vars(request)
 
@@ -19,13 +19,13 @@ func getElements(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	rows := db.Where("Feed = ?", feed).Find(&elements).RowsAffected
+	rows := db.Where("Feed = ?", feed).Find(&items).RowsAffected
 
 	if rows == 0 {
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	json.NewEncoder(writer).Encode(elements)
+	json.NewEncoder(writer).Encode(items)
 	return
 }

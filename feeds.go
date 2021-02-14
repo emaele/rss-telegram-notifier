@@ -6,12 +6,12 @@ import (
 )
 
 func getFeeds(writer http.ResponseWriter, request *http.Request) {
-	var feeds []rssfeed
+	var feeds []rssFeed
 
 	rows := db.Find(&feeds).RowsAffected
 
 	if rows == 0 {
-		writer.WriteHeader(http.StatusNotFound)
+		writeHTTPResponse(http.StatusNotFound, "no feeds", writer)
 		return
 	}
 

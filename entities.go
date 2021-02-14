@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type rsselement struct {
+type rssItem struct {
 	gorm.Model
 	Title       string `json:"Title"`
 	Description string `json:"Description"`
@@ -13,7 +13,7 @@ type rsselement struct {
 	Feed        uint `gorm:"not null"`
 }
 
-type rssfeed struct {
+type rssFeed struct {
 	gorm.Model
 	Title       string `json:"Title"`
 	Description string `json:"Description"`

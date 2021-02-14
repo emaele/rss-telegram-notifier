@@ -15,7 +15,7 @@ func setup(bindAddress string) *http.Server {
 	router.HandleFunc("/health", healthCheck).Methods(http.MethodGet)
 	router.HandleFunc("/add", addFeed).Methods(http.MethodPost)
 	router.HandleFunc("/feeds", getFeeds).Methods(http.MethodGet)
-	router.HandleFunc("/feeds/{id}", getElements).Methods(http.MethodGet)
+	router.HandleFunc("/feeds/{id}", getItems).Methods(http.MethodGet)
 
 	srv := &http.Server{
 		Addr:    bindAddress,

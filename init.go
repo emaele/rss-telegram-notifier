@@ -21,8 +21,8 @@ func init() {
 		log.Panic(err)
 	}
 
-	db.AutoMigrate(&rssfeed{})
-	db.AutoMigrate(&rsselement{})
+	db.AutoMigrate(&rssFeed{})
+	db.AutoMigrate(&rssItem{})
 
 	// initializing telegram bot
 	bot, err = tb.NewBot(tb.Settings{
