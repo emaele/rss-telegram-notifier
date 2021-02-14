@@ -57,6 +57,8 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	db.Select("ID").Where(rssFeed{URL: rssfeed.URL}).Find(&f)
+
 	// fetching initial elements
 	// setting them to true so we don't get spammed
 	addItems(f.ID, feed.Items, true)
