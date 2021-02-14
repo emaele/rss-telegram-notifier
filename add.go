@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/mmcdole/gofeed"
 )
 
 func addFeed(writer http.ResponseWriter, request *http.Request) {
@@ -56,8 +58,26 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// fetching initial elements
-	addItems(f.ID, feed.Items)
+	// setting them to true so we don't get spammed
+	addItems(f.ID, feed.Items, true)
 
 	writer.Write([]byte("added"))
 	return
+}
+
+func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
+	for _, feedelement := range items {
+		element := rssItem{
+			Title:       feedelement.Title,
+			Description: feedelement.Description,
+			URL:         feedelement.Link,
+			Sent:        false,
+			Feed:        feedID,
+		}
+
+		err := db.Where(rssItem{URL: element.URL}).FirstOrCreate(&element).Error
+		if err != nil {
+			log.Panic(err)
+		}
+	}
 }
