@@ -37,7 +37,9 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	var elements []rssItem
 	db.Where("ID = ?", f.ID).Find(&elements)
 
-	db.Delete(elements)
+	for _, element := range elements {
+		db.Delete(&element)
+	}
 
 	return
 }
