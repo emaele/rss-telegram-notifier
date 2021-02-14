@@ -5,16 +5,16 @@ import (
 )
 
 type rssItem struct {
-	gorm.Model
+	gorm.Model  `json:"-"`
 	Title       string `json:"Title"`
 	Description string `json:"Description"`
-	URL         string `gorm:"not null,unique"`
-	Sent        bool
-	Feed        uint `gorm:"not null"`
+	URL         string `json:"URL" gorm:"not null,unique"`
+	Sent        bool   `json:"-"`
+	Feed        uint   `json:"-" gorm:"not null"`
 }
 
 type rssFeed struct {
-	gorm.Model
+	gorm.Model  `json:"-"`
 	Title       string `json:"Title"`
 	Description string `json:"Description"`
 	URL         string `json:"URL" gorm:"not null,unique"`
