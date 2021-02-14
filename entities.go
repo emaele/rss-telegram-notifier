@@ -19,3 +19,7 @@ type rssFeed struct {
 	Description string `json:"Description"`
 	URL         string `json:"URL" gorm:"not null,unique"`
 }
+
+type addFeedRequest struct {
+	URL string `json:"URL"`
+}

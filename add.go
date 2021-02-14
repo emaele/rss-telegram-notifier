@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -17,17 +17,17 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		}
 	}()
 
-	// reading body as bytes stream
-	bodyBytes, err := ioutil.ReadAll(request.Body)
+	var addRequest addFeedRequest
+
+	err := json.NewDecoder(request.Body).Decode(&addRequest)
 	if err != nil {
 		log.Panic(err)
-		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
+		writeHTTPResponse(http.StatusInternalServerError, "", writer)
 		return
 	}
-	bodyString := string(bodyBytes)
 
 	// parsing url from body
-	feed, err := feedParser.ParseURL(bodyString)
+	feed, err := feedParser.ParseURL(addRequest.URL)
 	if err != nil {
 		log.Panic(err)
 		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
