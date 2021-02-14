@@ -12,7 +12,7 @@ func notificationRoutine() {
 
 	for range time.NewTicker(1 * time.Minute).C {
 		var elements []rsselement
-		rows := db.Debug().Where("sent = ?", false).Find(&elements).RowsAffected
+		rows := db.Where("sent = ?", false).Find(&elements).RowsAffected
 
 		if rows == 0 {
 			continue
