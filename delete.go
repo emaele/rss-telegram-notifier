@@ -26,11 +26,18 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	// deleting feed
 	err := db.Delete(&f).Error
 	if err != nil {
 		log.Panic(err)
 		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
 	}
+
+	// deleting feed elements
+	var elements []rssItem
+	db.Where("ID = ?", f.ID).Find(&elements)
+
+	db.Delete(elements)
 
 	return
 }
