@@ -71,7 +71,7 @@ func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
 			Title:       feedelement.Title,
 			Description: feedelement.Description,
 			URL:         feedelement.Link,
-			Sent:        false,
+			Sent:        markAsSent,
 			Feed:        feedID,
 		}
 

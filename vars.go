@@ -15,5 +15,7 @@ var (
 	bot        *tb.Bot
 	feedParser *gofeed.Parser
 
-	db *gorm.DB
+	db      *gorm.DB
+	dbpath  string
+	dbdebug bool
 )
