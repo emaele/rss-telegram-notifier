@@ -29,4 +29,10 @@ func readVars() {
 	if err != nil {
 		log.Fatal("telegram chatid is not valid")
 	}
+
+	// If not auth token provided we're running in no auth mode
+	authToken, ok = os.LookupEnv("AUTHORIZATION_TOKEN")
+	if !ok {
+		authToken = ""
+	}
 }

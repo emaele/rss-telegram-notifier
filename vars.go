@@ -12,6 +12,9 @@ var (
 	telegramToken  string
 	telegramChatID int64
 
+	// Authorization Header
+	authToken string
+
 	bot        *tb.Bot
 	feedParser *gofeed.Parser
 
