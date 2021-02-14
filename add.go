@@ -66,6 +66,8 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 }
 
 func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
+	log.Printf("adding %d feed elements\n", len(items))
+
 	for _, feedelement := range items {
 		element := rssItem{
 			Title:       feedelement.Title,
