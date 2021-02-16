@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/emaele/rss-telegram-notifier/entities"
 	"github.com/mmcdole/gofeed"
 	tb "gopkg.in/tucnak/telebot.v2"
 	"gorm.io/driver/sqlite"
@@ -24,8 +25,8 @@ func init() {
 		log.Panic(err)
 	}
 
-	db.AutoMigrate(&rssFeed{})
-	db.AutoMigrate(&rssItem{})
+	db.AutoMigrate(&entities.RssFeed{})
+	db.AutoMigrate(&entities.RssItem{})
 
 	// initializing telegram bot
 	bot, err = tb.NewBot(tb.Settings{

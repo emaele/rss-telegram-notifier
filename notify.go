@@ -5,13 +5,14 @@ import (
 	"log"
 	"time"
 
+	"github.com/emaele/rss-telegram-notifier/entities"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func notificationRoutine() {
 
 	for range time.NewTicker(10 * time.Minute).C {
-		var elements []rssItem
+		var elements []entities.RssItem
 		rows := db.Where("sent = ?", false).Find(&elements).RowsAffected
 
 		if rows == 0 {

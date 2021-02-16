@@ -8,10 +8,13 @@ import (
 func fetchElements() {
 	for range time.NewTicker(15 * time.Minute).C {
 		// get feeds
-		var feeds []rssFeed
+		feeds, err := retrieveFeeds()
+		if err != nil {
+			log.Printf("unable to retrieve feeds, %v\n", err)
+			continue
+		}
 
-		rows := db.Find(&feeds).RowsAffected
-		log.Printf("found %d feeds to check for\n", rows)
+		log.Printf("found %d feeds to check for\n", len(feeds))
 
 		for _, f := range feeds {
 			// fetching elements
@@ -20,7 +23,7 @@ func fetchElements() {
 				log.Panic(err)
 			}
 
-			log.Printf("found %d elements for %s", len(feed.Items), feed.Title)
+			log.Printf("found %d elements for %s\n", len(feed.Items), feed.Title)
 
 			// adding to db
 			addItems(f.ID, feed.Items, false)

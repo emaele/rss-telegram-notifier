@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/emaele/rss-telegram-notifier/entities"
 	"github.com/gorilla/mux"
 )
 
@@ -16,7 +17,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	var f rssFeed
+	var f entities.RssFeed
 
 	rows := db.Where("ID = ?", feed).Find(&f).RowsAffected
 
@@ -34,7 +35,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// deleting feed elements
-	var elements []rssItem
+	var elements []entities.RssItem
 	db.Where("Feed = ?", f.ID).Find(&elements)
 
 	for _, element := range elements {

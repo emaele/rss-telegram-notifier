@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mmcdole/gofeed"
+	"github.com/emaele/rss-telegram-notifier/entities"
 )
 
 func addFeed(writer http.ResponseWriter, request *http.Request) {
@@ -17,7 +17,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		}
 	}()
 
-	var addRequest addFeedRequest
+	var addRequest entities.AddFeedRequest
 
 	err := json.NewDecoder(request.Body).Decode(&addRequest)
 	if err != nil {
@@ -34,14 +34,14 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	rssfeed := rssFeed{
+	rssfeed := entities.RssFeed{
 		Title:       feed.Title,
 		Description: feed.Description,
 		URL:         feed.FeedLink,
 	}
 
-	var f rssFeed
-	rows := db.Where(rssFeed{URL: rssfeed.URL}).Find(&f).RowsAffected
+	var f entities.RssFeed
+	rows := db.Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f).RowsAffected
 
 	// if there are rows affected we have a duplicate
 	if rows != 0 {
@@ -57,7 +57,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	db.Select("ID").Where(rssFeed{URL: rssfeed.URL}).Find(&f)
+	db.Select("ID").Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f)
 
 	// fetching initial elements
 	// setting them to true so we don't get spammed
@@ -65,23 +65,4 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 
 	writer.Write([]byte("added"))
 	return
-}
-
-func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
-	log.Printf("adding %d feed elements\n", len(items))
-
-	for _, feedelement := range items {
-		element := rssItem{
-			Title:       feedelement.Title,
-			Description: feedelement.Description,
-			URL:         feedelement.Link,
-			Sent:        markAsSent,
-			Feed:        feedID,
-		}
-
-		err := db.Where(rssItem{URL: element.URL}).FirstOrCreate(&element).Error
-		if err != nil {
-			log.Panic(err)
-		}
-	}
 }

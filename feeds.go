@@ -6,11 +6,9 @@ import (
 )
 
 func getFeeds(writer http.ResponseWriter, request *http.Request) {
-	var feeds []rssFeed
+	feeds, err := retrieveFeeds()
 
-	rows := db.Find(&feeds).RowsAffected
-
-	if rows == 0 {
+	if err != nil {
 		writeHTTPResponse(http.StatusNotFound, "no feeds", writer)
 		return
 	}
