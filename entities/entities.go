@@ -11,7 +11,7 @@ type RssItem struct {
 	ID          uint           `json:"-" gorm:"primarykey"`
 	CreatedAt   time.Time      `json:"-"`
 	UpdatedAt   time.Time      `json:"-"`
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
+	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 	Title       string         `json:"Title"`
 	Description string         `json:"Description"`
 	URL         string         `json:"URL" gorm:"not null,unique"`
@@ -24,7 +24,7 @@ type RssFeed struct {
 	ID          uint           `json:"ID" gorm:"primarykey"`
 	CreatedAt   time.Time      `json:"-"`
 	UpdatedAt   time.Time      `json:"-"`
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
+	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 	Title       string         `json:"Title"`
 	Description string         `json:"Description"`
 	URL         string         `json:"URL" gorm:"not null,unique"`
