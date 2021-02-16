@@ -13,16 +13,15 @@ func getItems(writer http.ResponseWriter, request *http.Request) {
 
 	vars := mux.Vars(request)
 
-	feed, ok := vars["id"]
+	feedID, ok := vars["id"]
 	if !ok {
 		writeHTTPResponse(http.StatusNotFound, "requested feed is not found", writer)
 		return
 	}
 
-	rows := db.Where("Feed = ?", feed).Find(&items).RowsAffected
-
-	if rows == 0 {
-		writer.WriteHeader(http.StatusNotFound)
+	items, err := retriveItemsByFeedID(feedID)
+	if err != nil {
+		writeHTTPResponse(http.StatusInternalServerError, "unable to retrieve items", writer)
 		return
 	}
 

@@ -4,42 +4,50 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/emaele/rss-telegram-notifier/entities"
 	"github.com/gorilla/mux"
 )
 
 func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
-	feed, ok := vars["id"]
+	feedID, ok := vars["id"]
 	if !ok {
-		writeHTTPResponse(http.StatusNotFound, "request feed is not found", writer)
+		writeHTTPResponse(http.StatusInternalServerError, "there was an error deleting the feed", writer)
 		return
 	}
 
-	var f entities.RssFeed
-
-	rows := db.Where("ID = ?", feed).Find(&f).RowsAffected
-
-	if rows == 0 {
-		writer.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	// deleting feed
-	err := db.Delete(&f).Error
+	feed, err := retrieveFeedByID(feedID)
 	if err != nil {
-		log.Panic(err)
-		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
+		log.Fatal(err)
+		writeHTTPResponse(http.StatusNotFound, "unable to delete feed", writer)
+		return
+	}
+
+	// retrieve feed items first
+	items, err := retriveItemsByFeedID(feedID)
+	if err != nil {
+		log.Printf("unable to retrieve feed item, %v\n", err)
+		writeHTTPResponse(http.StatusInternalServerError, "unable to delete feed", writer)
 		return
 	}
 
 	// deleting feed elements
-	var elements []entities.RssItem
-	db.Where("Feed = ?", f.ID).Find(&elements)
+	for _, item := range items {
+		err := db.Delete(&item).Error
+		if err != nil {
+			// exit delete function if we're unable to delete an item
+			log.Printf("unable to delete feed item, %v\n", err)
+			writeHTTPResponse(http.StatusInternalServerError, "unable to delete feed", writer)
+			return
+		}
+	}
 
-	for _, element := range elements {
-		db.Delete(&element)
+	// now deleting feed
+	err = db.Delete(&feed).Error
+	if err != nil {
+		log.Printf("unable to delete feed, %v\n", err)
+		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
+		return
 	}
 
 	return
