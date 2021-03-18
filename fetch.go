@@ -7,6 +7,7 @@ import (
 
 func fetchElements() {
 	for range time.NewTicker(15 * time.Minute).C {
+
 		// get feeds
 		feeds, err := retrieveFeeds()
 		if err != nil {
@@ -17,6 +18,7 @@ func fetchElements() {
 		log.Printf("found %d feeds to check for\n", len(feeds))
 
 		for _, f := range feeds {
+
 			// fetching elements
 			feed, parserr := feedParser.ParseURL(f.URL)
 			if parserr != nil {

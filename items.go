@@ -5,13 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/emaele/rss-telegram-notifier/entities"
 	"github.com/gorilla/mux"
 )
 
 func getItems(writer http.ResponseWriter, request *http.Request) {
-	var items []entities.RssItem
-
 	vars := mux.Vars(request)
 
 	feedID, ok := vars["id"]
