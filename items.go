@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/emaele/rss-telegram-notifier/entities"
@@ -25,6 +26,10 @@ func getItems(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	json.NewEncoder(writer).Encode(items)
+	err = json.NewEncoder(writer).Encode(items)
+	if err != nil {
+		log.Println(err)
+	}
+
 	return
 }

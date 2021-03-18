@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -13,6 +14,10 @@ func getFeeds(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	json.NewEncoder(writer).Encode(feeds)
+	err = json.NewEncoder(writer).Encode(feeds)
+	if err != nil {
+		log.Println(err)
+	}
+
 	return
 }
