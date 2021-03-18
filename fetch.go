@@ -18,9 +18,10 @@ func fetchElements() {
 
 		for _, f := range feeds {
 			// fetching elements
-			feed, err := feedParser.ParseURL(f.URL)
-			if err != nil {
-				log.Panic(err)
+			feed, parserr := feedParser.ParseURL(f.URL)
+			if parserr != nil {
+				log.Printf("unable to fetch items for %s\n", f.Title)
+				continue
 			}
 
 			log.Printf("found %d elements for %s\n", len(feed.Items), feed.Title)
