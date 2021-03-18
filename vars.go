@@ -1,8 +1,8 @@
 package main
 
 import (
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/mmcdole/gofeed"
-	tb "gopkg.in/tucnak/telebot.v2"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +15,7 @@ var (
 	// Authorization Header
 	authToken string
 
-	bot        *tb.Bot
+	bot        *tg.BotAPI
 	feedParser *gofeed.Parser
 
 	db      *gorm.DB
