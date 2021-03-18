@@ -73,3 +73,11 @@ func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
 		}
 	}
 }
+
+func retrieveFeedTitle(feedID uint) string {
+	var feedTitle string
+
+	db.Table("rss_feeds").Where("ID = ?", feedID).Pluck("Title", &feedTitle)
+
+	return feedTitle
+}
