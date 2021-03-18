@@ -81,3 +81,14 @@ func retrieveFeedTitle(feedID uint) string {
 
 	return feedTitle
 }
+
+func retrieveItemsToSend() ([]entities.RssItem, error) {
+	var elements []entities.RssItem
+	err := db.Where("sent = ?", false).Find(&elements).Error
+
+	return elements, err
+}
+
+func setItemAsSent(element *entities.RssItem) error {
+	return db.Model(&element).Update("sent", true).Error
+}
