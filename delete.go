@@ -18,7 +18,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 
 	feed, err := retrieveFeedByID(feedID)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		writeHTTPResponse(http.StatusNotFound, "unable to delete feed", writer)
 		return
 	}
@@ -27,18 +27,17 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	items, err := retriveItemsByFeedID(feedID)
 	if err != nil {
 		log.Printf("unable to retrieve feed item, %v\n", err)
-		writeHTTPResponse(http.StatusInternalServerError, "unable to delete feed", writer)
-		return
-	}
+	} else {
+		// deleting feed elements
+		for _, item := range items {
+			err = db.Delete(&item).Error
+			if err != nil {
 
-	// deleting feed elements
-	for _, item := range items {
-		err := db.Delete(&item).Error
-		if err != nil {
-			// exit delete function if we're unable to delete an item
-			log.Printf("unable to delete feed item, %v\n", err)
-			writeHTTPResponse(http.StatusInternalServerError, "unable to delete feed", writer)
-			return
+				// exit delete function if we're unable to delete an item
+				log.Printf("unable to delete feed item, %v\n", err)
+				writeHTTPResponse(http.StatusInternalServerError, "unable to delete feed", writer)
+				return
+			}
 		}
 	}
 
