@@ -27,6 +27,4 @@ func getItems(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-
-	return
 }

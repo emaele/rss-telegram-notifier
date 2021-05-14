@@ -18,7 +18,6 @@ var (
 	bot        *tg.BotAPI
 	feedParser *gofeed.Parser
 
-	db      *gorm.DB
-	dbpath  string
-	dbdebug bool
+	db     *gorm.DB
+	dbpath string
 )
