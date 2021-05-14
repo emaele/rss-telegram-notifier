@@ -17,6 +17,4 @@ func getFeeds(writer http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-
-	return
 }

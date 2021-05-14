@@ -6,6 +6,7 @@ import (
 )
 
 func fetchElements() {
+	// starting new ticker, we're going to check for new feed items every 15 minutes
 	for range time.NewTicker(15 * time.Minute).C {
 
 		// get feeds

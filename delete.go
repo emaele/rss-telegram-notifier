@@ -48,6 +48,4 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
 		return
 	}
-
-	return
 }

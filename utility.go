@@ -18,8 +18,6 @@ func writeHTTPResponse(statusCode int, body string, writer http.ResponseWriter) 
 	if err != nil {
 		log.Println(err)
 	}
-
-	return
 }
 
 func createTelegramKeyboard(URL string) tg.InlineKeyboardMarkup {

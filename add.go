@@ -19,6 +19,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 
 	var addRequest entities.AddFeedRequest
 
+	// decoding request in struct
 	err := json.NewDecoder(request.Body).Decode(&addRequest)
 	if err != nil {
 		log.Println(err)
@@ -34,12 +35,14 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	// creating new feed
 	rssfeed := entities.RssFeed{
 		Title:       feed.Title,
 		Description: feed.Description,
 		URL:         feed.FeedLink,
 	}
 
+	// checking if the feed is duplicate
 	var f entities.RssFeed
 	rows := db.Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f).RowsAffected
 
