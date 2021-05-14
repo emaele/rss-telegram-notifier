@@ -13,7 +13,10 @@ import (
 
 func init() {
 	readVars()
-	setCliParams()
+
+	var dbpath string
+
+	setCliParams(dbpath)
 
 	feedParser = gofeed.NewParser()
 
@@ -39,15 +42,9 @@ func init() {
 	if err != nil {
 		log.Panic(err)
 	}
-
-	// starting fetch routine
-	go fetchElements()
-
-	// starting notify routine
-	go notificationRoutine()
 }
 
-func setCliParams() {
+func setCliParams(dbpath string) {
 	flag.StringVar(&dbpath, "db", "rss.db", "database file path")
 	flag.Parse()
 }
