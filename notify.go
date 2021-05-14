@@ -7,7 +7,7 @@ import (
 
 func notificationRoutine() {
 
-	for range time.NewTicker(10 * time.Minute).C {
+	for range time.NewTicker(15 * time.Minute).C {
 		elements, err := retrieveItemsToSend()
 		if err != nil {
 			continue
