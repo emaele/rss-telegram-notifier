@@ -84,8 +84,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// setting them to true so we don't get spammed
-
-	addItems(f.ID, filteredItems, false)
+	addItems(f.ID, filteredItems, true)
 
 	_, err = writer.Write([]byte("added"))
 	if err != nil {
