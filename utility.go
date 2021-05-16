@@ -37,6 +37,7 @@ func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
 
 	text := fmt.Sprintf("*%s*\n\n%s", feedTitle, element.Title)
 	text = strings.ReplaceAll(text, ".", "\\.")
+	text = strings.ReplaceAll(text, "-", "\\-")
 
 	message := tg.NewMessage(telegramChatID, text)
 	message.ParseMode = "MarkdownV2"

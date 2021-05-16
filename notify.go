@@ -7,7 +7,7 @@ import (
 
 func notificationRoutine() {
 
-	for range time.NewTicker(15 * time.Minute).C {
+	for range time.NewTicker(15 * time.Second).C {
 		elements, err := retrieveItemsToSend()
 		if err != nil {
 			continue
@@ -19,14 +19,14 @@ func notificationRoutine() {
 
 			_, err = bot.Send(message)
 			if err != nil {
-				log.Println(err)
+				log.Printf("Send to Telegram failed due to: %v", err)
 				continue
 			}
 
 			// setting as sent
 			err = setItemAsSent(&element)
 			if err != nil {
-				log.Println(err)
+				log.Printf("Set Item As Sent failed due to: %v", err)
 			}
 		}
 	}

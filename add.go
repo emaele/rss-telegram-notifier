@@ -7,6 +7,7 @@ import (
 	"regexp"
 
 	"github.com/emaele/rss-telegram-notifier/entities"
+	"github.com/mmcdole/gofeed"
 )
 
 func addFeed(writer http.ResponseWriter, request *http.Request) {
@@ -23,7 +24,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	// decoding request in struct
 	err := json.NewDecoder(request.Body).Decode(&addRequest)
 	if err != nil {
-		log.Println(err)
+		log.Printf("Decode failed due to: %v", err)
 		writeHTTPResponse(http.StatusInternalServerError, "", writer)
 		return
 	}
@@ -31,7 +32,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	// parsing url from body
 	feed, err := feedParser.ParseURL(addRequest.URL)
 	if err != nil {
-		log.Println(err)
+		log.Printf("Parse URL failed due to: %v", err)
 		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
 		return
 	}
@@ -39,7 +40,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	// parsing the regex
 	reg, err := regexp.Compile(addRequest.Filter)
 	if err != nil {
-		log.Println(err)
+		log.Printf("Regex Compile failed due to: %v", err)
 		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
 		return
 	}
@@ -72,10 +73,19 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	db.Select("ID").Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f)
-	
-	// fetching initial elements
+
+	// fetching and filtering initial elements
+	filteredItems := make([]*gofeed.Item, 0, len(feed.Items))
+
+	for _, itm := range feed.Items {
+		if reg.MatchString(itm.Title) {
+			filteredItems = append(filteredItems, itm)
+		}
+	}
+
 	// setting them to true so we don't get spammed
-	addItems(f.ID, feed.Items, true)
+
+	addItems(f.ID, filteredItems, false)
 
 	_, err = writer.Write([]byte("added"))
 	if err != nil {

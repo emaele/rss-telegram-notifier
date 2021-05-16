@@ -33,8 +33,8 @@ func fetchElements() {
 			// filtering elements
 			reg := regexp.MustCompile(f.Filter)
 
-			filteredItems := make([]*gofeed.Item, len(feed.Items), 0)
-			
+			filteredItems := make([]*gofeed.Item, 0, len(feed.Items))
+
 			for _, itm := range feed.Items {
 				if reg.MatchString(itm.Title) {
 					filteredItems = append(filteredItems, itm)
