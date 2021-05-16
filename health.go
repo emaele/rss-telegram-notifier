@@ -1,9 +1,13 @@
 package main
 
 import (
+	"log"
 	"net/http"
 )
 
 func healthCheck(writer http.ResponseWriter, _ *http.Request) {
-	writer.Write([]byte("healthy!"))
+	_, err := writer.Write([]byte("healthy!"))
+	if err != nil {
+		log.Println(err)
+	}
 }

@@ -73,3 +73,22 @@ func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
 		}
 	}
 }
+
+func retrieveFeedTitle(feedID uint) string {
+	var feedTitle string
+
+	db.Table("rss_feeds").Where("ID = ?", feedID).Pluck("Title", &feedTitle)
+
+	return feedTitle
+}
+
+func retrieveItemsToSend() ([]entities.RssItem, error) {
+	var elements []entities.RssItem
+	err := db.Where("sent = ?", false).Find(&elements).Error
+
+	return elements, err
+}
+
+func setItemAsSent(element *entities.RssItem) error {
+	return db.Model(&element).Update("sent", true).Error
+}

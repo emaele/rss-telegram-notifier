@@ -2,17 +2,19 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
-func getFeeds(writer http.ResponseWriter, request *http.Request) {
+func getFeeds(writer http.ResponseWriter, _ *http.Request) {
 	feeds, err := retrieveFeeds()
-
 	if err != nil {
 		writeHTTPResponse(http.StatusNotFound, "no feeds", writer)
 		return
 	}
 
-	json.NewEncoder(writer).Encode(feeds)
-	return
+	err = json.NewEncoder(writer).Encode(feeds)
+	if err != nil {
+		log.Println(err)
+	}
 }

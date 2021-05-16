@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 func checkTokenMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
@@ -9,6 +12,7 @@ func checkTokenMiddleware(next http.Handler) http.Handler {
 		providedToken := request.Header.Get("Authorization")
 		if providedToken != authToken {
 			writeHTTPResponse(http.StatusUnauthorized, "invalid token", writer)
+			log.Printf("%s provided invalid token\n", request.RemoteAddr)
 			return
 		}
 

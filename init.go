@@ -3,18 +3,20 @@ package main
 import (
 	"flag"
 	"log"
-	"time"
 
 	"github.com/emaele/rss-telegram-notifier/entities"
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/mmcdole/gofeed"
-	tb "gopkg.in/tucnak/telebot.v2"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 func init() {
 	readVars()
-	setCliParams()
+
+	var dbpath string
+
+	setCliParams(dbpath)
 
 	feedParser = gofeed.NewParser()
 
@@ -25,23 +27,24 @@ func init() {
 		log.Panic(err)
 	}
 
-	db.AutoMigrate(&entities.RssFeed{})
-	db.AutoMigrate(&entities.RssItem{})
+	err = db.AutoMigrate(&entities.RssFeed{})
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = db.AutoMigrate(&entities.RssItem{})
+	if err != nil {
+		log.Panic(err)
+	}
 
 	// initializing telegram bot
-	bot, err = tb.NewBot(tb.Settings{
-		Token:  telegramToken,
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
-
-	// starting fetch routine
-	go fetchElements()
-
-	// starting notify routine
-	go notificationRoutine()
+	bot, err = tg.NewBotAPI(telegramToken)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
-func setCliParams() {
+func setCliParams(dbpath string) {
 	flag.StringVar(&dbpath, "db", "rss.db", "database file path")
 	flag.Parse()
 }
