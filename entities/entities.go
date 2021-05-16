@@ -28,9 +28,11 @@ type RssFeed struct {
 	Title       string         `json:"Title"`
 	Description string         `json:"Description"`
 	URL         string         `json:"URL" gorm:"not null,unique"`
+	Filter      string         `json:"Filter" gorm:"not null,unique"`
 }
 
 // AddFeedRequest is the struct for the add request
 type AddFeedRequest struct {
-	URL string `json:"URL"`
+	URL    string `json:"URL"`
+	Filter string `json:"Filter"`
 }

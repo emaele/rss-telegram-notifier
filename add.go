@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"regexp"
 
 	"github.com/emaele/rss-telegram-notifier/entities"
 )
@@ -35,11 +36,20 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	// parsing the regex
+	reg, err := regexp.Compile(addRequest.Filter)
+	if err != nil {
+		log.Println(err)
+		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
+		return
+	}
+
 	// creating new feed
 	rssfeed := entities.RssFeed{
 		Title:       feed.Title,
 		Description: feed.Description,
 		URL:         feed.FeedLink,
+		Filter:      reg.String(),
 	}
 
 	// checking if the feed is duplicate
@@ -62,7 +72,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	db.Select("ID").Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f)
-
+	
 	// fetching initial elements
 	// setting them to true so we don't get spammed
 	addItems(f.ID, feed.Items, true)
