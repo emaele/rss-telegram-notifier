@@ -40,6 +40,7 @@ Adding a feed it's pretty easy, just call the `/add` endpoint with a JSON struct
 
 ```JSON
 {
-    "URL":"https://feed_url"
+    "URL":"https://feed_url",
+    "Filter": "([0-9].*|(regex))" 
 }
 ```
