@@ -16,7 +16,7 @@ func init() {
 
 	var dbpath string
 
-	setCliParams(dbpath)
+	setCliParams(&dbpath)
 
 	feedParser = gofeed.NewParser()
 
@@ -44,7 +44,7 @@ func init() {
 	}
 }
 
-func setCliParams(dbpath string) {
-	flag.StringVar(&dbpath, "db", "rss.db", "database file path")
+func setCliParams(dbpath *string) {
+	flag.StringVar(dbpath, "db", "rss.db", "database file path")
 	flag.Parse()
 }
