@@ -34,7 +34,7 @@ func createTelegramKeyboard(URL string) tg.InlineKeyboardMarkup {
 func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
 
 	feedTitle := retrieveFeedTitle(element.Feed)
-	tgMarkdownReservedChars := []string{".", "-", "(", ")", "#", "!"}
+	tgMarkdownReservedChars := []string{".", "-", "(", ")", "#", "!", "|"}
 
 	text := fmt.Sprintf("*%s*\n\n%s", feedTitle, element.Title)
 	for _, char := range tgMarkdownReservedChars {
