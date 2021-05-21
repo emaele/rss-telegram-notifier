@@ -55,7 +55,7 @@ func retriveItemsByFeedID(ID string) ([]entities.RssItem, error) {
 	return items, nil
 }
 
-func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
+func addItems(feedID int64, items []*gofeed.Item, markAsSent bool) {
 	log.Printf("adding %d feed elements\n", len(items))
 
 	for _, feedelement := range items {
@@ -74,7 +74,7 @@ func addItems(feedID uint, items []*gofeed.Item, markAsSent bool) {
 	}
 }
 
-func retrieveFeedTitle(feedID uint) string {
+func retrieveFeedTitle(feedID int64) string {
 	var feedTitle string
 
 	db.Table("rss_feeds").Where("ID = ?", feedID).Pluck("Title", &feedTitle)
@@ -91,4 +91,34 @@ func retrieveItemsToSend() ([]entities.RssItem, error) {
 
 func setItemAsSent(element *entities.RssItem) error {
 	return db.Model(&element).Update("sent", true).Error
+}
+
+func deleteItemFromDB(element *entities.RssItem) error {
+	return db.Delete(element).Error
+}
+
+func deleteFeedFromDB(element *entities.RssFeed) error {
+	return db.Delete(element).Error
+}
+
+func feedExists(URL string) bool {
+	// checking if the feed is duplicate
+	var f entities.RssFeed
+	rows := db.Where(entities.RssFeed{URL: URL}).Find(&f).RowsAffected
+
+	if rows == 0 {
+		return false
+	}
+
+	return true
+}
+
+func createFeed(rssfeed *entities.RssFeed) error {
+	return db.Create(rssfeed).Error
+}
+
+func retrieveFeedID(URL string) (feedID int64) {
+	db.Where(entities.RssFeed{URL: URL}).Pluck("ID", &feedID)
+
+	return
 }

@@ -53,26 +53,22 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		Filter:      reg.String(),
 	}
 
-	// checking if the feed is duplicate
-	var f entities.RssFeed
-	rows := db.Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f).RowsAffected
-
 	// if there are rows affected we have a duplicate
-	if rows != 0 {
+	if feedExists(feed.Link) {
 		writeHTTPResponse(http.StatusUnprocessableEntity, "duplicate!", writer)
 		log.Printf("rss feed %s is a duplicate\n", addRequest.URL)
 		return
 	}
 
 	// Adding feed to db
-	err = db.Create(&rssfeed).Error
+	err = createFeed(&rssfeed)
 	if err != nil {
 		writeHTTPResponse(http.StatusInternalServerError, "unable to add feed", writer)
 		log.Println(err)
 		return
 	}
 
-	db.Select("ID").Where(entities.RssFeed{URL: rssfeed.URL}).Find(&f)
+	feedID := retrieveFeedID(feed.Link)
 
 	// fetching and filtering initial elements
 	filteredItems := make([]*gofeed.Item, 0, len(feed.Items))
@@ -84,7 +80,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// setting them to true so we don't get spammed
-	addItems(f.ID, filteredItems, true)
+	addItems(feedID, filteredItems, true)
 
 	_, err = writer.Write([]byte("added"))
 	if err != nil {

@@ -30,7 +30,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	} else {
 		// deleting feed elements
 		for _, item := range items {
-			err = db.Delete(&item).Error
+			err = deleteItemFromDB(&item)
 			if err != nil {
 
 				// exit delete function if we're unable to delete an item
@@ -42,7 +42,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// now deleting feed
-	err = db.Delete(&feed).Error
+	err = deleteFeedFromDB(&feed)
 	if err != nil {
 		log.Printf("unable to delete feed, %v\n", err)
 		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
