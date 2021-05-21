@@ -10,7 +10,10 @@ import (
 func setup(bindAddress string) *http.Server {
 
 	router := mux.NewRouter()
-	router.Use(checkTokenMiddleware)
+
+	if authToken != "" {
+		router.Use(checkTokenMiddleware)
+	}
 
 	// setting up routes
 	router.HandleFunc("/health", healthCheck).Methods(http.MethodGet)
