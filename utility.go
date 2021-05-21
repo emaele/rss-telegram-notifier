@@ -34,10 +34,12 @@ func createTelegramKeyboard(URL string) tg.InlineKeyboardMarkup {
 func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
 
 	feedTitle := retrieveFeedTitle(element.Feed)
+	tgMarkdownReservedChars := []string{".", "-", "(", ")"}
 
 	text := fmt.Sprintf("*%s*\n\n%s", feedTitle, element.Title)
-	text = strings.ReplaceAll(text, ".", "\\.")
-	text = strings.ReplaceAll(text, "-", "\\-")
+	for _, char := range tgMarkdownReservedChars {
+		text = strings.ReplaceAll(text, char, fmt.Sprintf("\\%s", char))
+	}
 
 	message := tg.NewMessage(telegramChatID, text)
 	message.ParseMode = "MarkdownV2"
