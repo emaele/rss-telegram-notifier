@@ -69,7 +69,7 @@ func addItems(feedID int64, items []*gofeed.Item, markAsSent bool) {
 
 		err := db.Where(entities.RssItem{URL: element.URL}).FirstOrCreate(&element).Error
 		if err != nil {
-			log.Panic(err)
+			log.Printf("there was an error adding %s, %v", element.Title, err)
 		}
 	}
 }
