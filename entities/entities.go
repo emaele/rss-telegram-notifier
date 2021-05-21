@@ -8,7 +8,7 @@ import (
 
 // RssItem is a rss element
 type RssItem struct {
-	ID          uint           `json:"-" gorm:"primarykey"`
+	ID          int64          `json:"-" gorm:"primarykey"`
 	CreatedAt   time.Time      `json:"-"`
 	UpdatedAt   time.Time      `json:"-"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
@@ -16,12 +16,12 @@ type RssItem struct {
 	Description string         `json:"Description"`
 	URL         string         `json:"URL" gorm:"not null,unique"`
 	Sent        bool           `json:"-"`
-	Feed        uint           `json:"-" gorm:"not null"`
+	Feed        int64          `json:"-" gorm:"not null"`
 }
 
 // RssFeed represents a rss feed
 type RssFeed struct {
-	ID          uint           `json:"ID" gorm:"primarykey"`
+	ID          int64          `json:"ID" gorm:"primarykey"`
 	CreatedAt   time.Time      `json:"-"`
 	UpdatedAt   time.Time      `json:"-"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
