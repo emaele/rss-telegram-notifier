@@ -68,7 +68,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	feedID := retrieveFeedID(feed.Link)
+	feedID := retrieveFeedID(rssfeed.URL)
 
 	// fetching and filtering initial elements
 	filteredItems := make([]*gofeed.Item, 0, len(feed.Items))

@@ -7,14 +7,6 @@ import (
 )
 
 var (
-	// Config params
-	bindAddress    string
-	telegramToken  string
-	telegramChatID int64
-
-	// Authorization Header
-	authToken string
-
 	bot        *tg.BotAPI
 	feedParser *gofeed.Parser
 

@@ -2,27 +2,27 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 
-	"github.com/emaele/rss-telegram-notifier/entities"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/mmcdole/gofeed"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	"github.com/emaele/rss-telegram-notifier/entities"
+	"github.com/emaele/rss-telegram-notifier/types"
 )
 
 func init() {
-	readVars()
-
-	var dbpath string
-
-	setCliParams(&dbpath)
+	configuration := readVars()
 
 	feedParser = gofeed.NewParser()
 
 	var err error
 
-	db, err = gorm.Open(sqlite.Open(dbpath), &gorm.Config{})
+	connstring := fmt.Sprintf(types.Mariadbdsn, configuration.DBUser, configuration.DBPassword, configuration.DBHost, configuration.DBName)
+	db, err = gorm.Open(mysql.Open(connstring), &gorm.Config{})
 	if err != nil {
 		log.Panic(err)
 	}
