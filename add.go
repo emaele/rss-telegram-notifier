@@ -64,7 +64,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	err = createFeed(&rssfeed)
 	if err != nil {
 		writeHTTPResponse(http.StatusInternalServerError, "unable to add feed", writer)
-		log.Println(err)
+		log.Printf("error creating feed %s, %v\n", rssfeed.Title, err)
 		return
 	}
 
@@ -84,6 +84,6 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 
 	_, err = writer.Write([]byte("added"))
 	if err != nil {
-		log.Println(err)
+		log.Printf("error writing response to %s, %v", request.RemoteAddr, err)
 	}
 }
