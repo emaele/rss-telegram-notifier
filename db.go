@@ -118,7 +118,7 @@ func createFeed(rssfeed *entities.RssFeed) error {
 }
 
 func retrieveFeedID(URL string) (feedID int64) {
-	db.Where(entities.RssFeed{URL: URL}).Pluck("ID", &feedID)
+	db.Table("rss_feeds").Where(entities.RssFeed{URL: URL}).Pluck("id", &feedID)
 
 	return
 }
