@@ -5,13 +5,16 @@ import (
 )
 
 func main() {
+
+	backstore := initBackstore()
+
 	// starting fetch routine
-	go fetchElements()
+	go backstore.fetchElements()
 
 	// starting notify routine
-	go notificationRoutine()
+	go backstore.notificationRoutine()
 
-	server := setup(bindAddress)
+	server := setup(backstore.conf.BindAddress, backstore.conf.AuthorizationToken)
 
 	log.Println("server listening...")
 	log.Panic(server.ListenAndServe())

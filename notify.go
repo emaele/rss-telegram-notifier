@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func notificationRoutine() {
+func (b *Backstore) notificationRoutine() {
 
 	for range time.NewTicker(15 * time.Second).C {
 		elements, err := retrieveItemsToSend()
@@ -17,7 +17,7 @@ func notificationRoutine() {
 
 			message := createTelegramMessage(element)
 
-			_, err = bot.Send(message)
+			_, err = b.bot.Send(message)
 			if err != nil {
 				log.Printf("Send to Telegram failed due to: %v", err)
 				continue

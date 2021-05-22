@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-func getFeeds(writer http.ResponseWriter, _ *http.Request) {
-	feeds, err := retrieveFeeds()
+func (b *Backstore) getFeeds(writer http.ResponseWriter, _ *http.Request) {
+	feeds, err := retrieveFeeds(b.db)
 	if err != nil {
 		writeHTTPResponse(http.StatusNotFound, "no feeds", writer)
 		return

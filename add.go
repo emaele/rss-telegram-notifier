@@ -10,7 +10,7 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func addFeed(writer http.ResponseWriter, request *http.Request) {
+func (b *Backstore) addFeed(writer http.ResponseWriter, request *http.Request) {
 
 	defer func() {
 		err := request.Body.Close()
@@ -30,7 +30,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// parsing url from body
-	feed, err := feedParser.ParseURL(addRequest.URL)
+	feed, err := b.feedparser.ParseURL(addRequest.URL)
 	if err != nil {
 		log.Printf("Parse URL failed due to: %v", err)
 		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
@@ -80,7 +80,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// setting them to true so we don't get spammed
-	addItems(feedID, filteredItems, true)
+	addItems(b.db, feedID, filteredItems, true)
 
 	_, err = writer.Write([]byte("added"))
 	if err != nil {

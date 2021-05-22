@@ -8,12 +8,12 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func fetchElements() {
+func (b *Backstore) fetchElements() {
 	// starting new ticker, we're going to check for new feed items every 15 minutes
 	for range time.NewTicker(15 * time.Minute).C {
 
 		// get feeds
-		feeds, err := retrieveFeeds()
+		feeds, err := retrieveFeeds(b.db)
 		if err != nil {
 			log.Printf("unable to retrieve feeds, %v\n", err)
 			continue
@@ -24,7 +24,7 @@ func fetchElements() {
 		for _, f := range feeds {
 
 			// fetching elements
-			feed, parserr := feedParser.ParseURL(f.URL)
+			feed, parserr := b.feedparser.ParseURL(f.URL)
 			if parserr != nil {
 				log.Printf("unable to fetch items for %s\n", f.Title)
 				continue
@@ -44,7 +44,7 @@ func fetchElements() {
 			log.Printf("found %d elements for %s\n", len(filteredItems), feed.Title)
 
 			// adding to db
-			addItems(f.ID, filteredItems, false)
+			addItems(b.db, f.ID, filteredItems, false)
 		}
 	}
 }

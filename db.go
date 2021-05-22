@@ -6,6 +6,7 @@ import (
 
 	"github.com/emaele/rss-telegram-notifier/entities"
 	"github.com/mmcdole/gofeed"
+	"gorm.io/gorm"
 )
 
 func retrieveFeedByID(ID string) (entities.RssFeed, error) {
@@ -25,7 +26,7 @@ func retrieveFeedByID(ID string) (entities.RssFeed, error) {
 	return feed, nil
 }
 
-func retrieveFeeds() ([]entities.RssFeed, error) {
+func retrieveFeeds(db *gorm.DB) ([]entities.RssFeed, error) {
 	var feeds []entities.RssFeed
 
 	res := db.Find(&feeds)
@@ -55,7 +56,7 @@ func retriveItemsByFeedID(ID string) ([]entities.RssItem, error) {
 	return items, nil
 }
 
-func addItems(feedID int64, items []*gofeed.Item, markAsSent bool) {
+func addItems(db *gorm.DB, feedID int64, items []*gofeed.Item, markAsSent bool) {
 	log.Printf("adding %d feed elements\n", len(items))
 
 	for _, feedelement := range items {

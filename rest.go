@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func setup(bindAddress string) *http.Server {
+func setup(bindAddress, authToken string) *http.Server {
 
 	router := mux.NewRouter()
 
