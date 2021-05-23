@@ -52,7 +52,7 @@ func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
 
 	// Creating the message with pre-parsed items
 	if element.ImageURL != "" {
-		text = fmt.Sprintf("📣 *%s*\n\n[🖼️](%s)\n\n➡️ %s", feedTitle, element.ImageURL, element.Title)
+		text = fmt.Sprintf("📣 *%s*\n\n[➡️](%s) %s", feedTitle, element.ImageURL, element.Title)
 	} else {
 		text = fmt.Sprintf("📣 *%s*\n\n➡️ %s", feedTitle, element.Title)
 	}
