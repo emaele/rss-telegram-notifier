@@ -34,11 +34,27 @@ func createTelegramKeyboard(URL string) tg.InlineKeyboardMarkup {
 func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
 
 	feedTitle := retrieveFeedTitle(element.Feed)
-	tgMarkdownReservedChars := []string{".", "-", "(", ")", "#", "!", "|"}
 
-	text := fmt.Sprintf("*%s*\n\n%s", feedTitle, element.Title)
+	if feedTitle == "" {
+		feedTitle = "New Feed!"
+	}
+
+	tgMarkdownReservedChars := []string{".", "-", "(", ")", "#", "!", "|", "[", "]", "_", "*", "`", "~"}
+
+	var text string
+
+	// Pre-parsing our elements for markdown Reserved Chars
 	for _, char := range tgMarkdownReservedChars {
-		text = strings.ReplaceAll(text, char, fmt.Sprintf(`\%s`, char))
+		element.Title = strings.ReplaceAll(element.Title, char, fmt.Sprintf(`\%s`, char))
+		element.ImageURL = strings.ReplaceAll(element.ImageURL, char, fmt.Sprintf(`\%s`, char))
+		feedTitle = strings.ReplaceAll(feedTitle, char, fmt.Sprintf(`\%s`, char))
+	}
+
+	// Creating the message with pre-parsed items
+	if element.ImageURL != "" {
+		text = fmt.Sprintf("📣 *%s*\n\n[🖼️](%s)\n\n➡️ %s", feedTitle, element.ImageURL, element.Title)
+	} else {
+		text = fmt.Sprintf("📣 *%s*\n\n➡️ %s", feedTitle, element.Title)
 	}
 
 	message := tg.NewMessage(telegramChatID, text)
