@@ -14,7 +14,7 @@ func main() {
 	// starting notify routine
 	go backstore.notificationRoutine()
 
-	server := setup(backstore.conf.BindAddress, backstore.conf.AuthorizationToken)
+	server := backstore.setup(backstore.conf.BindAddress, backstore.conf.AuthorizationToken)
 
 	log.Println("server listening...")
 	log.Panic(server.ListenAndServe())

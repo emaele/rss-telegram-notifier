@@ -111,11 +111,7 @@ func feedExists(URL string) bool {
 	var f entities.RssFeed
 	rows := db.Where(entities.RssFeed{URL: URL}).Find(&f).RowsAffected
 
-	if rows == 0 {
-		return false
-	}
-
-	return true
+	return rows != 0
 }
 
 func createFeed(rssfeed *entities.RssFeed) error {

@@ -31,7 +31,7 @@ func createTelegramKeyboard(URL string) tg.InlineKeyboardMarkup {
 	return keyboard
 }
 
-func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
+func createTelegramMessage(element entities.RssItem, telegramChatID int64) tg.MessageConfig {
 
 	feedTitle := retrieveFeedTitle(element.Feed)
 

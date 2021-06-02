@@ -15,7 +15,7 @@ func (b *Backstore) notificationRoutine() {
 
 		for _, element := range elements {
 
-			message := createTelegramMessage(element)
+			message := createTelegramMessage(element, b.conf.TelegramChatID)
 
 			_, err = b.bot.Send(message)
 			if err != nil {

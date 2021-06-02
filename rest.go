@@ -7,12 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func setup(bindAddress, authToken string) *http.Server {
+func (b *Backstore) setup(bindAddress, authToken string) *http.Server {
 
 	router := mux.NewRouter()
 
 	if authToken != "" {
-		router.Use(checkTokenMiddleware)
+		router.Use(b.checkTokenMiddleware)
 	}
 
 	// setting up routes
@@ -20,8 +20,8 @@ func setup(bindAddress, authToken string) *http.Server {
 
 	// feed router
 	feedRouter := router.PathPrefix("/feed").Subrouter()
-	feedRouter.HandleFunc("", getFeeds).Methods(http.MethodGet)
-	feedRouter.HandleFunc("/add", addFeed).Methods(http.MethodPost)
+	feedRouter.HandleFunc("", b.getFeeds).Methods(http.MethodGet)
+	feedRouter.HandleFunc("/add", b.addFeed).Methods(http.MethodPost)
 	feedRouter.HandleFunc("/{id}", getItems).Methods(http.MethodGet)
 	feedRouter.HandleFunc("/delete/{id}", deleteFeed).Methods(http.MethodPost)
 
