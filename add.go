@@ -37,6 +37,8 @@ func (b *Backstore) addFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	parseYoutubeFeeds(feed)
+
 	// parsing the regex
 	reg, err := regexp.Compile(addRequest.Filter)
 	if err != nil {
@@ -73,9 +75,10 @@ func (b *Backstore) addFeed(writer http.ResponseWriter, request *http.Request) {
 	// fetching and filtering initial elements
 	filteredItems := make([]*gofeed.Item, 0, len(feed.Items))
 
-	for _, itm := range feed.Items {
+	for index, itm := range feed.Items {
+
 		if reg.MatchString(itm.Title) {
-			filteredItems = append(filteredItems, itm)
+			filteredItems = append(filteredItems, feed.Items[index])
 		}
 	}
 

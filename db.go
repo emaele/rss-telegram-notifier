@@ -68,6 +68,10 @@ func addItems(db *gorm.DB, feedID int64, items []*gofeed.Item, markAsSent bool) 
 			Feed:        feedID,
 		}
 
+		if feedelement.Image != nil {
+			element.ImageURL = feedelement.Image.URL
+		}
+
 		err := db.Where(entities.RssItem{URL: element.URL}).FirstOrCreate(&element).Error
 		if err != nil {
 			log.Printf("there was an error adding %s, %v", element.Title, err)

@@ -19,7 +19,7 @@ func (b *Backstore) notificationRoutine() {
 
 			_, err = b.bot.Send(message)
 			if err != nil {
-				log.Printf("Send to Telegram failed due to: %v", err)
+				log.Printf("Send \"%s\" to Telegram failed due to: %v", message.Text, err)
 				continue
 			}
 
