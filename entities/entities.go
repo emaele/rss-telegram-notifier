@@ -17,6 +17,7 @@ type RssItem struct {
 	URL         string         `json:"URL" gorm:"not null,unique"`
 	Sent        bool           `json:"-"`
 	Feed        int64          `json:"-" gorm:"not null"`
+	ImageURL    string         `json:"-"`
 }
 
 // RssFeed represents a rss feed

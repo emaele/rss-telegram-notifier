@@ -30,6 +30,8 @@ func fetchElements() {
 				continue
 			}
 
+			parseYoutubeFeeds(feed)
+
 			// filtering elements
 			reg := regexp.MustCompile(f.Filter)
 
