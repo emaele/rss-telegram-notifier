@@ -1,5 +1,5 @@
 # First stage: build the executable.
-FROM golang:1.15.8-buster as builder
+FROM golang:1.16.4-alpine as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR $GOPATH/src/github.com/emaele/rss-telegram-notifier
@@ -11,13 +11,13 @@ COPY .  .
 RUN go install
 
 # Final stage: the running container.
-FROM alpine:3.13.1
+FROM alpine:3.13.5
 
 # Copy the built executable
-COPY --from=builder /go/bin/rss-telegram-notifier .
+COPY --from=builder /go/bin/rss-telegram-notifier /rss
 
 # Expose the port
 EXPOSE 26009
 
 # Run the compiled binary.
-CMD ["./rss-telegram-notifier"]
+CMD ["/rss"]
