@@ -40,7 +40,7 @@ func createTelegramMessage(db *gorm.DB, element entities.RssItem, telegramChatID
 		feedTitle = "New Feed!"
 	}
 
-	tgMarkdownReservedChars := []string{".", "-", "(", ")", "#", "!", "|", "[", "]", "_", "*", "`", "~"}
+	tgMarkdownReservedChars := []string{".", "-", "(", ")", "#", "!", "|", "[", "]", "_", "*", "`", "~", "+"}
 
 	var text string
 
