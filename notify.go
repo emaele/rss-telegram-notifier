@@ -8,14 +8,14 @@ import (
 func (b *Backstore) notificationRoutine() {
 
 	for range time.NewTicker(15 * time.Second).C {
-		elements, err := retrieveItemsToSend()
+		elements, err := retrieveItemsToSend(b.db)
 		if err != nil {
 			continue
 		}
 
 		for _, element := range elements {
 
-			message := createTelegramMessage(element, b.conf.TelegramChatID)
+			message := createTelegramMessage(b.db, element, b.conf.TelegramChatID)
 
 			_, err = b.bot.Send(message)
 			if err != nil {
@@ -24,7 +24,7 @@ func (b *Backstore) notificationRoutine() {
 			}
 
 			// setting as sent
-			err = setItemAsSent(&element)
+			err = setItemAsSent(b.db, &element)
 			if err != nil {
 				log.Printf("Set Item As Sent failed due to: %v", err)
 			}

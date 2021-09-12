@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getItems(writer http.ResponseWriter, request *http.Request) {
+func (b *Backstore) getItems(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
 	feedID, ok := vars["id"]
@@ -17,7 +17,7 @@ func getItems(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	items, err := retriveItemsByFeedID(feedID)
+	items, err := retriveItemsByFeedID(b.db, feedID)
 	if err != nil {
 		writeHTTPResponse(http.StatusInternalServerError, "unable to retrieve items", writer)
 		return

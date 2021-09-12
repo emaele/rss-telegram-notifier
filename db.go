@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func retrieveFeedByID(ID string) (entities.RssFeed, error) {
+func retrieveFeedByID(db *gorm.DB, ID string) (entities.RssFeed, error) {
 	var feed entities.RssFeed
 
 	// search for the requested feed
@@ -41,7 +41,7 @@ func retrieveFeeds(db *gorm.DB) ([]entities.RssFeed, error) {
 	return feeds, nil
 }
 
-func retriveItemsByFeedID(ID string) ([]entities.RssItem, error) {
+func retriveItemsByFeedID(db *gorm.DB, ID string) ([]entities.RssItem, error) {
 	var items []entities.RssItem
 
 	res := db.Where("Feed = ?", ID).Find(&items)
@@ -79,7 +79,7 @@ func addItems(db *gorm.DB, feedID int64, items []*gofeed.Item, markAsSent bool) 
 	}
 }
 
-func retrieveFeedTitle(feedID int64) string {
+func retrieveFeedTitle(db *gorm.DB, feedID int64) string {
 	var feedTitle string
 
 	db.Table("rss_feeds").Where("ID = ?", feedID).Pluck("Title", &feedTitle)
@@ -87,26 +87,26 @@ func retrieveFeedTitle(feedID int64) string {
 	return feedTitle
 }
 
-func retrieveItemsToSend() ([]entities.RssItem, error) {
+func retrieveItemsToSend(db *gorm.DB) ([]entities.RssItem, error) {
 	var elements []entities.RssItem
 	err := db.Where("sent = ?", false).Find(&elements).Error
 
 	return elements, err
 }
 
-func setItemAsSent(element *entities.RssItem) error {
+func setItemAsSent(db *gorm.DB, element *entities.RssItem) error {
 	return db.Model(&element).Update("sent", true).Error
 }
 
-func deleteItemFromDB(element *entities.RssItem) error {
+func deleteItemFromDB(db *gorm.DB, element *entities.RssItem) error {
 	return db.Delete(element).Error
 }
 
-func deleteFeedFromDB(element *entities.RssFeed) error {
+func deleteFeedFromDB(db *gorm.DB, element *entities.RssFeed) error {
 	return db.Delete(element).Error
 }
 
-func feedExists(URL string) bool {
+func feedExists(db *gorm.DB, URL string) bool {
 	// checking if the feed is duplicate
 	var f entities.RssFeed
 	rows := db.Where(entities.RssFeed{URL: URL}).Find(&f).RowsAffected
@@ -114,11 +114,11 @@ func feedExists(URL string) bool {
 	return rows != 0
 }
 
-func createFeed(rssfeed *entities.RssFeed) error {
+func createFeed(db *gorm.DB, rssfeed *entities.RssFeed) error {
 	return db.Create(rssfeed).Error
 }
 
-func retrieveFeedID(URL string) (feedID int64) {
+func retrieveFeedID(db *gorm.DB, URL string) (feedID int64) {
 	db.Table("rss_feeds").Where(entities.RssFeed{URL: URL}).Pluck("id", &feedID)
 
 	return

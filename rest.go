@@ -22,8 +22,8 @@ func (b *Backstore) setup(bindAddress, authToken string) *http.Server {
 	feedRouter := router.PathPrefix("/feed").Subrouter()
 	feedRouter.HandleFunc("", b.getFeeds).Methods(http.MethodGet)
 	feedRouter.HandleFunc("/add", b.addFeed).Methods(http.MethodPost)
-	feedRouter.HandleFunc("/{id}", getItems).Methods(http.MethodGet)
-	feedRouter.HandleFunc("/delete/{id}", deleteFeed).Methods(http.MethodPost)
+	feedRouter.HandleFunc("/{id}", b.getItems).Methods(http.MethodGet)
+	feedRouter.HandleFunc("/delete/{id}", b.deleteFeed).Methods(http.MethodPost)
 
 	srv := &http.Server{
 		Addr:    bindAddress,

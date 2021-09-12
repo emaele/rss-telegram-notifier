@@ -56,21 +56,21 @@ func (b *Backstore) addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// if there are rows affected we have a duplicate
-	if feedExists(feed.Link) {
+	if feedExists(b.db, feed.Link) {
 		writeHTTPResponse(http.StatusUnprocessableEntity, "duplicate!", writer)
 		log.Printf("rss feed %s is a duplicate\n", addRequest.URL)
 		return
 	}
 
 	// Adding feed to db
-	err = createFeed(&rssfeed)
+	err = createFeed(b.db, &rssfeed)
 	if err != nil {
 		writeHTTPResponse(http.StatusInternalServerError, "unable to add feed", writer)
 		log.Printf("error creating feed %s, %v\n", rssfeed.Title, err)
 		return
 	}
 
-	feedID := retrieveFeedID(rssfeed.URL)
+	feedID := retrieveFeedID(b.db, rssfeed.URL)
 
 	// fetching and filtering initial elements
 	filteredItems := make([]*gofeed.Item, 0, len(feed.Items))

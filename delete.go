@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func deleteFeed(writer http.ResponseWriter, request *http.Request) {
+func (b *Backstore) deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
 	feedID, ok := vars["id"]
@@ -16,7 +16,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	feed, err := retrieveFeedByID(feedID)
+	feed, err := retrieveFeedByID(b.db, feedID)
 	if err != nil {
 		log.Println(err)
 		writeHTTPResponse(http.StatusNotFound, "unable to delete feed", writer)
@@ -24,13 +24,13 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// retrieve feed items first
-	items, err := retriveItemsByFeedID(feedID)
+	items, err := retriveItemsByFeedID(b.db, feedID)
 	if err != nil {
 		log.Printf("unable to retrieve feed item, %v\n", err)
 	} else {
 		// deleting feed elements
 		for _, item := range items {
-			err = deleteItemFromDB(&item)
+			err = deleteItemFromDB(b.db, &item)
 			if err != nil {
 
 				// exit delete function if we're unable to delete an item
@@ -42,7 +42,7 @@ func deleteFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// now deleting feed
-	err = deleteFeedFromDB(&feed)
+	err = deleteFeedFromDB(b.db, &feed)
 	if err != nil {
 		log.Printf("unable to delete feed, %v\n", err)
 		writeHTTPResponse(http.StatusInternalServerError, "unable to delete", writer)
