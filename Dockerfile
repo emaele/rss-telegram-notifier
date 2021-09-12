@@ -1,5 +1,5 @@
 # First stage: build the executable.
-FROM golang:1.16.4-alpine as builder
+FROM golang:1.17.1-alpine as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR $GOPATH/src/github.com/emaele/rss-telegram-notifier
