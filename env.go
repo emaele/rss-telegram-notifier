@@ -13,7 +13,7 @@ func readVars() (conf types.ConfigurationParameters) {
 
 	conf.BindAddress, ok = os.LookupEnv("RSS_SERVER_BIND_ADDRESS")
 	if !ok {
-		conf.BindAddress = "localhost:26009"
+		conf.BindAddress = "0.0.0.0:26009"
 	}
 
 	conf.TelegramToken, ok = os.LookupEnv("TELEGRAM_TOKEN")
