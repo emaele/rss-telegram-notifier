@@ -10,7 +10,7 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func addFeed(writer http.ResponseWriter, request *http.Request) {
+func (b *Backstore) addFeed(writer http.ResponseWriter, request *http.Request) {
 
 	defer func() {
 		err := request.Body.Close()
@@ -30,7 +30,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// parsing url from body
-	feed, err := feedParser.ParseURL(addRequest.URL)
+	feed, err := b.feedparser.ParseURL(addRequest.URL)
 	if err != nil {
 		log.Printf("Parse URL failed due to: %v", err)
 		writeHTTPResponse(http.StatusUnprocessableEntity, "", writer)
@@ -56,21 +56,21 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// if there are rows affected we have a duplicate
-	if feedExists(feed.Link) {
+	if feedExists(b.db, feed.Link) {
 		writeHTTPResponse(http.StatusUnprocessableEntity, "duplicate!", writer)
 		log.Printf("rss feed %s is a duplicate\n", addRequest.URL)
 		return
 	}
 
 	// Adding feed to db
-	err = createFeed(&rssfeed)
+	err = createFeed(b.db, &rssfeed)
 	if err != nil {
 		writeHTTPResponse(http.StatusInternalServerError, "unable to add feed", writer)
 		log.Printf("error creating feed %s, %v\n", rssfeed.Title, err)
 		return
 	}
 
-	feedID := retrieveFeedID(feed.Link)
+	feedID := retrieveFeedID(b.db, rssfeed.URL)
 
 	// fetching and filtering initial elements
 	filteredItems := make([]*gofeed.Item, 0, len(feed.Items))
@@ -83,7 +83,7 @@ func addFeed(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	// setting them to true so we don't get spammed
-	addItems(feedID, filteredItems, true)
+	addItems(b.db, feedID, filteredItems, true)
 
 	_, err = writer.Write([]byte("added"))
 	if err != nil {

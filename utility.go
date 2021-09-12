@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/emaele/rss-telegram-notifier/entities"
+	"gorm.io/gorm"
 
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -31,9 +32,9 @@ func createTelegramKeyboard(URL string) tg.InlineKeyboardMarkup {
 	return keyboard
 }
 
-func createTelegramMessage(element entities.RssItem) tg.MessageConfig {
+func createTelegramMessage(db *gorm.DB, element entities.RssItem, telegramChatID int64) tg.MessageConfig {
 
-	feedTitle := retrieveFeedTitle(element.Feed)
+	feedTitle := retrieveFeedTitle(db, element.Feed)
 
 	if feedTitle == "" {
 		feedTitle = "New Feed!"

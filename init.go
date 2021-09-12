@@ -1,28 +1,26 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"log"
 
 	"github.com/emaele/rss-telegram-notifier/entities"
+	"github.com/emaele/rss-telegram-notifier/types"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/mmcdole/gofeed"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func init() {
-	readVars()
+func initBackstore() (b Backstore) {
+	configuration := readVars()
 
-	var dbpath string
-
-	setCliParams(&dbpath)
-
-	feedParser = gofeed.NewParser()
+	feedParser := gofeed.NewParser()
 
 	var err error
 
-	db, err = gorm.Open(sqlite.Open(dbpath), &gorm.Config{})
+	connstring := fmt.Sprintf(types.Mariadbdsn, configuration.DBUser, configuration.DBPassword, configuration.DBHost, configuration.DBPort, configuration.DBName)
+	db, err := gorm.Open(mysql.Open(connstring), &gorm.Config{})
 	if err != nil {
 		log.Panic(err)
 	}
@@ -38,13 +36,15 @@ func init() {
 	}
 
 	// initializing telegram bot
-	bot, err = tg.NewBotAPI(telegramToken)
+	bot, err := tg.NewBotAPI(configuration.TelegramToken)
 	if err != nil {
 		log.Panic(err)
 	}
-}
 
-func setCliParams(dbpath *string) {
-	flag.StringVar(dbpath, "db", "rss.db", "database file path")
-	flag.Parse()
+	return Backstore{
+		conf:       &configuration,
+		bot:        bot,
+		feedparser: feedParser,
+		db:         db,
+	}
 }

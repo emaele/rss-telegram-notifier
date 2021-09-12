@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: mariadb:10.6.1-focal
+    restart: always
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: allow
+      MARIADB_DATABASE: rss
+      MARIADB_USER: rss
+      MARIADB_PASSWORD: rss
+  
+  rss:
+    build: .
+    restart: always
+    ports:
+      - 26009:26009
+    environment: 
+      TELEGRAM_TOKEN: 1234567890:abcdefghijklmno
+      TELEGRAM_CHAT: 1234567890
+      DB_USER: rss
+      DB_PASSWORD: rss
+      DB_HOST: db
+      DB_NAME: rss
+      DB_PORT: 3306
