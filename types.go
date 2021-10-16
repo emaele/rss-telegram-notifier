@@ -13,3 +13,7 @@ type Backstore struct {
 	feedparser *gofeed.Parser
 	db         *gorm.DB
 }
+
+var (
+	tgMarkdownReservedChars = []string{".", "-", "(", ")", "#", "!", "|", "[", "]", "_", "*", "`", "~", "+"}
+)
