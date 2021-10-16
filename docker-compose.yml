@@ -12,13 +12,14 @@ services:
       MARIADB_PASSWORD: rss
   
   rss:
-    build: .
+    image: ghcr.io/emaele/rss-telegram-notifier:main
     restart: always
     ports:
       - 26009:26009
     environment: 
       TELEGRAM_TOKEN: 1234567890:abcdefghijklmno
       TELEGRAM_CHAT: 1234567890
+      AUTHORIZATION_TOKEN: 4cecdbc6-1399-480d-ac92-27515be695b0
       DB_USER: rss
       DB_PASSWORD: rss
       DB_HOST: db
