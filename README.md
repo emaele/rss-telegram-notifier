@@ -2,18 +2,20 @@
 
 Receive RSS feed elements directly in a telegram chat!
 
+# Installation
+
+## Docker
+You can run the bot using the provided `docker-compose.yml` file, change environment variables inside of it following the above table.
+
 ## Configuration
 
 | **Var** 	                 | **Description**                 	                                                    |
 |----------------------------|--------------------------------------------------------------------------------------|
-| `RSS_SERVER_BIND_ADDRESS`  | The bind address in the form `address:port` (optional, default is localhost:26009)   |
 | `TELEGRAM_TOKEN`           | This is your telegram token, grab it one from [@botfather](https://t.me/botfather)   |
 | `TELEGRAM_CHAT`            | This is the telegram chat_id where the posts will be sent                            |
 | `AUTHORIZATION_TOKEN`      | Authorization token for all the http calls                                           |
 
-## Setup
-
-### Build
+## Build it by yourself
 
 Clone the repo, move into the folder and type
 
