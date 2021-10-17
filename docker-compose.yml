@@ -10,7 +10,7 @@ services:
       MARIADB_DATABASE: rss
       MARIADB_USER: rss
       MARIADB_PASSWORD: rss
-    volume:
+    volumes:
       - /my/own/datadir:/var/lib/mysql
   
   rss:
