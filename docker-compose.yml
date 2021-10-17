@@ -10,6 +10,8 @@ services:
       MARIADB_DATABASE: rss
       MARIADB_USER: rss
       MARIADB_PASSWORD: rss
+    volume:
+      - /my/own/datadir:/var/lib/mysql
   
   rss:
     image: ghcr.io/emaele/rss-telegram-notifier:main
