@@ -8,5 +8,5 @@ require (
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/stretchr/testify v1.5.1 // indirect
 	gorm.io/driver/mysql v1.3.2
-	gorm.io/gorm v1.23.4
+	gorm.io/gorm v1.24.6
 )
