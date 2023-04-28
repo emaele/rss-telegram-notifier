@@ -7,6 +7,6 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/stretchr/testify v1.5.1 // indirect
-	gorm.io/driver/mysql v1.3.2
-	gorm.io/gorm v1.24.6
+	gorm.io/driver/mysql v1.5.0
+	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11
 )
